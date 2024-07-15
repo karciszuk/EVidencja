@@ -31,8 +31,7 @@ if response.status_code == 200:
 else:
     print("Failed to retrieve data:", response.status_code)
 
-df = pd.json_normalize(data['data'])
-df.columns = df.columns.map(str)
+df = pd.json_normalize(data['data'])    
 df.columns = df.columns.str.replace('attributes.','', regex=True)
 df.columns = df.columns.str.replace('-', '_', regex=True)
 df = df.drop(columns=['links.self'])

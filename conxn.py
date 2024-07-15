@@ -5,7 +5,7 @@ import urllib
 
 conn = urllib.parse.quote_plus( 
     'Data Source Name=qrice;' 
-    'Driver={SQL Server};' 
+    'Driver={ODBC Driver 17 for SQL Server};' 
     'Server=QRICE;' 
     'Database=cepik;' 
     'Trusted_connection=yes;' 
