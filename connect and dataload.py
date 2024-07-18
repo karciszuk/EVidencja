@@ -7,6 +7,7 @@ from pandas import json_normalize
 import sqlalchemy as sa
 from conxn import coxn
 import json
+from datetime import datetime
 
 class SSLAdapter(HTTPAdapter):
     def init_poolmanager(self, *args, **kwargs):
@@ -21,13 +22,19 @@ session.mount('https://', SSLAdapter())
 
 response = session.get("https://api.cepik.gov.pl/pojazdy", params={
     "wojewodztwo": "30",
-    "data-od": "20190101",
-    "data-do": "20190131"
+    "data-od": "20100101"
 })
 
 if response.status_code == 200:
-    data = response.json()
-    #print(data)
+    try:
+        data = response.json()  # attempt to parse JSON response
+        if 'data' in data:
+            df = pd.json_normalize(data['data'])
+            print(df.head())  # display the first few rows of the DataFrame
+        else:
+            print("The key 'data' is not in the response JSON")
+    except ValueError as e:
+        print("Error parsing JSON:", e)
 else:
     print("Failed to retrieve data:", response.status_code)
 
