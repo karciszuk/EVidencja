@@ -8,7 +8,23 @@ import sqlalchemy as sa
 from conxn import coxn
 import json
 from datetime import datetime
+from ConnectAndDataload import connect_and_dataload, dataload
+from conxn import coxn
 
-session.get("https://api.cepik.gov.pl/pojazdy", params={
-    "wojewodztwo": "30",
-    "data-od": "20100101"
+api_link = "https://api.cepik.gov.pl/pojazdy"
+voivodeship = 0
+params={
+        "wojewodztwo": voivodeship,
+        "data-od": "20100101"
+        }
+table = 'CepikApiData'
+
+
+df, data = connect_and_dataload(api_link,params)
+
+df = pd.json_normalize(data['data'])    
+df.columns = df.columns.str.replace('attributes.','', regex=True)
+df.columns = df.columns.str.replace('-', '_', regex=True)
+df = df.drop(columns=['links.self'])
+
+dataload(df,coxn,table)
