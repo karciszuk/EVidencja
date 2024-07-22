@@ -37,9 +37,26 @@ def connect_and_dataload(api_link,params):
     
     return df,data
 
-def dataload(df,coxn,table):
+def to_database(df,coxn,table):
     try:
         df.to_sql(table, con=coxn, schema='dbo', if_exists='replace', index=True)
+        print("Data successfully written to SQL database.")
+    except Exception as e:
+        print("Failed to write data to SQL database:", str(e))
+
+def to_csv(df):
+    from pathlib import Path
+    import os
+    import inspect
+
+    caller_frame = inspect.stack()[1]
+    caller_file_path_full = os.path.abspath(caller_frame.filename)
+    caller_file_path_short = caller_file_path_full[:-3]
+    extension = '.csv'
+    filename = (f'{caller_file_path_short}{extension}')
+
+    try:
+        df.to_csv(filename,index=False)
         print("Data successfully written to SQL database.")
     except Exception as e:
         print("Failed to write data to SQL database:", str(e))

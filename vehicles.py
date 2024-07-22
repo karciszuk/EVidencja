@@ -8,7 +8,7 @@ import sqlalchemy as sa
 from conxn import coxn
 import json
 from datetime import datetime
-from ConnectAndDataload import connect_and_dataload, dataload
+from ConnectAndDataload import connect_and_dataload, to_database
 from conxn import coxn
 
 api_link = "https://api.cepik.gov.pl/pojazdy"
@@ -27,4 +27,4 @@ df.columns = df.columns.str.replace('attributes.','', regex=True)
 df.columns = df.columns.str.replace('-', '_', regex=True)
 df = df.drop(columns=['links.self'])
 
-dataload(df,coxn,table)
+to_database(df,coxn,table)
