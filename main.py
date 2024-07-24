@@ -27,7 +27,6 @@ def connect_and_dataload(api_link,params):
             data = response.json()  # attempt to parse JSON response
             if 'data' in data:
                 df = pd.json_normalize(data['data'])
-                print(df.head())  # display the first few rows of the DataFrame
             else:
                 print("The key 'data' is not in the response JSON")
         except ValueError as e:
@@ -44,7 +43,7 @@ def to_database(df,coxn,table):
     except Exception as e:
         print("Failed to write data to SQL database:", str(e))
 
-def to_csv(df):
+def csv_name():
     from pathlib import Path
     import os
     import inspect
@@ -55,8 +54,13 @@ def to_csv(df):
     extension = '.csv'
     filename = (f'{caller_file_path_short}{extension}')
 
+    return filename
+
+def to_csv(df,filename):
+    from pathlib import Path
+    
     try:
         df.to_csv(filename,index=False)
-        print("Data successfully written to SQL database.")
+        print("Data successfully written to .csv file.")
     except Exception as e:
-        print("Failed to write data to SQL database:", str(e))
+        print("Failed to write data to .csv file:", str(e))
