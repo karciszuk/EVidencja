@@ -1,14 +1,8 @@
-def connect_and_dataload(api_link,params):
+def connect_and_dataload(base_url,params):
     import requests
     from requests.adapters import HTTPAdapter
-    from urllib3.poolmanager import PoolManager
     import ssl
     import pandas as pd
-    from pandas import json_normalize
-    import sqlalchemy as sa
-    from conxn import coxn
-    import json
-    from datetime import datetime
 
     class SSLAdapter(HTTPAdapter):
         def init_poolmanager(self, *args, **kwargs):
@@ -20,7 +14,7 @@ def connect_and_dataload(api_link,params):
     session = requests.Session()
     session.mount('https://', SSLAdapter())
 
-    response = session.get(api_link, params=params)
+    response = session.get(base_url, params=params)
 
     if response.status_code == 200:
         try:
@@ -34,7 +28,7 @@ def connect_and_dataload(api_link,params):
     else:
         print("Failed to retrieve data:", response.status_code)
     
-    return df,data
+    return df
 
 def to_database(df,coxn,table):
     try:

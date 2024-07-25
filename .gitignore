@@ -1,0 +1,12 @@
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Node.js dependencies
+node_modules/
+
+# IDE specific files
+.vscode/
+.idea/
+
+.CSVs/
