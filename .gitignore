@@ -1,6 +1,7 @@
 # Python bytecode
 __pycache__/
 *.pyc
+*.csv
 
 # Node.js dependencies
 node_modules/
