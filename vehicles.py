@@ -1,5 +1,6 @@
 import pandas as pd
 from main import connect_and_dataload, to_database, to_csv, csv_name
+<<<<<<< HEAD
 import time
 from datetime import datetime
 import glob
@@ -9,12 +10,15 @@ import calendar
 def check_file(path,name):
         files = glob.glob(os.path.join(path, name))
         return files
+=======
+>>>>>>> parent of a9498fb (1.33)
 
-base_url = "https://api.cepik.gov.pl/pojazdy"
+api_link = "https://api.cepik.gov.pl/pojazdy"
 table = 'CepikApiData'
-path = "CSVs/"
+
 df = pd.read_csv('voivodeship.csv')
 
+<<<<<<< HEAD
 current_date = datetime.now().strftime('%Y%m%d')
 date_difference = int(current_date[:4])-2010
 
@@ -56,3 +60,17 @@ for klucz,wartosc in zip(df['klucz-slownika'],df['wartosc-slownika']):
                         time.sleep(2)
 
 print("Vehicles .csv's created.")
+=======
+for klucz,wartosc in zip(df['klucz-slownika'],df['wartosc-slownika']):
+        voivodeship = klucz
+        params={
+                "wojewodztwo": 30,
+                "data-od": "20100101"
+                }
+        df, data = connect_and_dataload(api_link,params)
+        df = pd.json_normalize(data['data'])    
+        df.columns = df.columns.str.replace('attributes.','', regex=True)
+        df.columns = df.columns.str.replace('-', '_', regex=True)
+        df = df.drop(columns=['links.self'])
+        to_csv(df,wartosc)
+>>>>>>> parent of a9498fb (1.33)
