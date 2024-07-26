@@ -5,8 +5,7 @@ api_link = "https://api.cepik.gov.pl/slowniki/wojewodztwa"
 params={}
 table = 'Dictionary'
 
-df, data = connect_and_dataload(api_link,params=params)
-df = pd.json_normalize(data['data']) 
+df = connect_and_dataload(api_link,params=params)
 df_exploded = df.explode('attributes.dostepne-rekordy-slownika')
 df_voivodeship = df_exploded['attributes.dostepne-rekordy-slownika']
 

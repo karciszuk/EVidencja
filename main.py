@@ -21,6 +21,7 @@ def connect_and_dataload(api_link,params):
     session.mount('https://', SSLAdapter())
 
     response = session.get(api_link, params=params)
+    headers = response.headers
 
     if response.status_code == 200:
         try:
@@ -34,7 +35,7 @@ def connect_and_dataload(api_link,params):
     else:
         print("Failed to retrieve data:", response.status_code)
     
-    return df,data
+    return df, data, headers
 
 def to_database(df,coxn,table):
     try:
