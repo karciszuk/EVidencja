@@ -13,4 +13,4 @@ df_voivodeship_table = pd.json_normalize(df_voivodeship.dropna().tolist()) # If 
 
 csvname = csv_name()
 
-to_csv(df_voivodeship_table, csvname)
+to_csv(df_voivodeship_table, "CSVs/"+csvname)

@@ -1,3 +1,17 @@
+def conxn():
+    from sqlalchemy import create_engine 
+    import urllib 
+
+    conn = urllib.parse.quote_plus( 
+        'Data Source Name=qrice;' 
+        'Driver={ODBC Driver 17 for SQL Server};' 
+        'Server=QRICE;' 
+        'Database=cepik;' 
+        'Trusted_connection=yes;' 
+    ) 
+    coxn = create_engine('mssql+pyodbc:///?odbc_connect={}'.format(conn))
+    return coxn  
+
 def connect_and_dataload(api_link,params):
     import requests
     from requests.adapters import HTTPAdapter
@@ -37,7 +51,8 @@ def connect_and_dataload(api_link,params):
     
     return df, data, headers
 
-def to_database(df,coxn,table):
+def to_database(df,table):
+    coxn=conxn()
     try:
         df.to_sql(table, con=coxn, schema='dbo', if_exists='replace', index=True)
         print("Data successfully written to SQL database.")

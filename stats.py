@@ -21,4 +21,4 @@ headers = connect_and_dataload(api_link,params=params)
 total_pages = headers.get('X-Total-Pages')
 print(f"Total pages: {total_pages}")
 
-#to_csv(df, csvname)
+#to_csv(df, "CSVs/"+csvname)
