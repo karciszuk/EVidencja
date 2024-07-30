@@ -15,14 +15,8 @@ def conxn():
 def connect_and_dataload(api_link,params):
     import requests
     from requests.adapters import HTTPAdapter
-    from urllib3.poolmanager import PoolManager
     import ssl
     import pandas as pd
-    from pandas import json_normalize
-    import sqlalchemy as sa
-    from conxn import coxn
-    import json
-    from datetime import datetime
 
     class SSLAdapter(HTTPAdapter):
         def init_poolmanager(self, *args, **kwargs):
@@ -35,7 +29,6 @@ def connect_and_dataload(api_link,params):
     session.mount('https://', SSLAdapter())
 
     response = session.get(api_link, params=params)
-    headers = response.headers
 
     if response.status_code == 200:
         try:
@@ -48,8 +41,8 @@ def connect_and_dataload(api_link,params):
             print("Error parsing JSON:", e)
     else:
         print("Failed to retrieve data:", response.status_code)
-    
-    return df, data, headers
+        
+    return df, data
 
 def to_database(df,table):
     coxn=conxn()
@@ -72,9 +65,7 @@ def csv_name():
 
     return filename
 
-def to_csv(df,filename):
-    from pathlib import Path
-    
+def to_csv(df,filename):   
     try:
         df.to_csv(filename,index=False)
         print("Data successfully written to .csv file.")
