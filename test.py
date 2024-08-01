@@ -1,12 +1,14 @@
-import os
-import inspect
+import pandas as pd
 
-caller_frame = inspect.stack()[0]
-caller_file_path_full = os.path.abspath(caller_frame.filename)
-caller_file_path_short = caller_file_path_full[:-3]
-extension = '.csv'
-filename = (f'{caller_file_path_short}+{extension}')
-
-print(caller_file_path_full)
-print(caller_file_path_short)
-print(filename)
+df = pd.read_csv('voivodeship.csv')
+for klucz,wartosc in zip(df['klucz-slownika'],df['wartosc-slownika']):
+        for i in range(5):
+                k = 1
+                match = 2
+                while k <= match:
+                        print("woj: "+str(klucz)+" ", end=' ')
+                        print("itr: "+str(k)+" ", end=' ')
+                        match = 5
+                        print("new match: "+str(match)+" ", end=' ')
+                        k += 1
+                        print("new itr: "+str(k))
