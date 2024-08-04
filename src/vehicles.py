@@ -9,7 +9,7 @@ import logging
 
 # Configure logging
 logging.basicConfig(
-        filename='api_requests.log', 
+        filename='docs/api_requests.log', 
         level=logging.INFO, 
         format='%(asctime)s %(levelname)s:%(message)s')
 
@@ -19,8 +19,8 @@ def check_file(path,name):
 
 api_link = "https://api.cepik.gov.pl/pojazdy"
 table = 'CepikApiData'
-path = "CSVs/"
-df = pd.read_csv('voivodeship.csv')
+path = "docs/CSVs/"
+df = pd.read_csv('docs/voivodeship.csv')
 
 original_date = '20100101'
 current_date = datetime.now().strftime('%Y%m%d')
@@ -72,8 +72,7 @@ for klucz,wartosc in zip(df['klucz-slownika'],df['wartosc-slownika']):
                                                       'wariant',
                                                       'id',
                                                       'type',
-                                                      'kategoria_pojazdu',
-                                                      ''
+                                                      'kategoria_pojazdu'
                                                       ])
 
                                 df.to_csv(path+new_file_name)
