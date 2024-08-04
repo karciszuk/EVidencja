@@ -1,5 +1,5 @@
 import pandas as pd
-from main import connect_and_dataload, to_csv
+from main import connect_and_dataload
 import time
 from datetime import datetime
 import glob
@@ -22,6 +22,7 @@ table = 'CepikApiData'
 path = "CSVs/"
 df = pd.read_csv('voivodeship.csv')
 
+original_date = '20100101'
 current_date = datetime.now().strftime('%Y%m%d')
 date_difference = int(current_date[:4])-2010
 
@@ -29,7 +30,6 @@ request_count = 0
 MAX_REQUESTS = 100
 
 for klucz,wartosc in zip(df['klucz-slownika'],df['wartosc-slownika']):
-        original_date = '20100101'
         for i in range(date_difference):
                 k, match = 1, 2
                 while k <= match:
@@ -39,7 +39,6 @@ for klucz,wartosc in zip(df['klucz-slownika'],df['wartosc-slownika']):
                                 print(log)
                                 time.sleep(60)
                                 request_count = 0
-
                         try:
                                 time.sleep(0.05)  # Ensure at most 20 requests per second
                                 start_date = str(int(original_date[:4]) + i)+"0101"
@@ -54,7 +53,7 @@ for klucz,wartosc in zip(df['klucz-slownika'],df['wartosc-slownika']):
                                         "limit": "500",
                                         "page": str(k)
                                 }
-                                new_file_name=wartosc+" "+start_date+"-"+next_date+" page "+str(k)+".csv"
+                                new_file_name=wartosc+" "+start_date+"-"+next_date+" "+str(k)+".csv"
                                 if check_file(path,new_file_name):
                                         k += 1
                                         match += 1
@@ -68,9 +67,16 @@ for klucz,wartosc in zip(df['klucz-slownika'],df['wartosc-slownika']):
                                 df = pd.DataFrame(df)
                                 df.columns = df.columns.str.replace('attributes.','', regex=True)
                                 df.columns = df.columns.str.replace('-', '_', regex=True)
-                                df = df.drop(columns=['links.self'])
+                                df = df.drop(columns=['links.self',
+                                                      'typ',
+                                                      'wariant',
+                                                      'id',
+                                                      'type',
+                                                      'kategoria_pojazdu',
+                                                      ''
+                                                      ])
 
-                                to_csv(df,path+new_file_name)
+                                df.to_csv(path+new_file_name)
                                 log = f"Request successful: Page {k} from max pages {match}, Date Range: {start_date} to {next_date}"
                                 logging.info(log)
                                 print(log)
