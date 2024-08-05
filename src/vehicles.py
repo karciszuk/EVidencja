@@ -54,12 +54,15 @@ for klucz,wartosc in zip(df['klucz-slownika'],df['wartosc-slownika']):
                                         "page": str(k)
                                 }
                                 new_file_name=wartosc+" "+start_date+"-"+next_date+" "+str(k)+".csv"
-                                if check_file(path,new_file_name):
+                                print(wartosc+"/"+new_file_name)
+                                if check_file(path+wartosc+"/",new_file_name):
                                         k += 1
                                         match += 1
                                         continue
-
-                                df, data = connect_and_dataload(api_link,params) 
+                                print(new_file_name)
+                                df, data = connect_and_dataload(api_link,params)
+                                if "Error parsing JSON:" in df:
+                                        df.to_csv("CSVs/")
                                 last_link = data['links']['last']
                                 match = re.search(r'page=(\d+)&typ-daty', last_link)
                                 match = int(match.group(1))
@@ -75,7 +78,7 @@ for klucz,wartosc in zip(df['klucz-slownika'],df['wartosc-slownika']):
                                                       'kategoria_pojazdu'
                                                       ])
 
-                                df.to_csv(path+new_file_name)
+                                df.to_csv(path+wartosc+"/"+new_file_name)
                                 log = f"Request successful: Page {k} from max pages {match}, Date Range: {start_date} to {next_date}"
                                 logging.info(log)
                                 print(log)
@@ -95,7 +98,7 @@ for klucz,wartosc in zip(df['klucz-slownika'],df['wartosc-slownika']):
                                         log = "An unexpected error occurred. Stopping."
                                         logging.error(log)
                                         print(log)
-                                break
+                                continue
                         
 log = f"Vehicles file '{new_file_name}' has been created."
 logging.info(log)

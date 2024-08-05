@@ -9,6 +9,7 @@ node_modules/
 # IDE specific files
 .vscode/
 .idea/
+.venv/
 
 .CSVs/
 *.log

@@ -35,6 +35,7 @@ def connect_and_dataload(api_link,params):
             data = response.json()  # attempt to parse JSON response
             if 'data' in data:
                 df = pd.json_normalize(data['data'])
+                print(df)
             else:
                 print("The key 'data' is not in the response JSON")
         except ValueError as e:
