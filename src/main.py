@@ -17,6 +17,8 @@ def connect_and_dataload(api_link,params):
     from requests.adapters import HTTPAdapter
     import ssl
     import pandas as pd
+    import logging
+    import time
 
     class SSLAdapter(HTTPAdapter):
         def init_poolmanager(self, *args, **kwargs):
@@ -28,6 +30,18 @@ def connect_and_dataload(api_link,params):
     session = requests.Session()
     session.mount('https://', SSLAdapter())
 
+    request_count = 0
+    MAX_REQUESTS = 100
+
+    if request_count >= MAX_REQUESTS:
+        log = "API rate limit reached. Waiting for a minute."
+        logging.info(log)
+        print(log)
+        time.sleep(60)
+        request_count = 0
+
+    time.sleep(0.05)  # Ensure at most 20 requests per second
+
     response = session.get(api_link, params=params)
 
     if response.status_code == 200:
@@ -35,13 +49,32 @@ def connect_and_dataload(api_link,params):
             data = response.json()  # attempt to parse JSON response
             if 'data' in data:
                 df = pd.json_normalize(data['data'])
+                log = f"Request successful"
+                logging.info(log)
+                print(log)
             else:
                 print("The key 'data' is not in the response JSON")
         except ValueError as e:
+            df.to_csv(data)
             print("Error parsing JSON:", e)
+        except Exception as e:
+            logging.error(f"Error, failed to retrieve data: {e}")
+            print(f"Error, failed to retrieve data: {e}")
+            if '429' in str(e):
+                    log = "Rate limit reached. Waiting for 60 seconds."
+                    logging.warning(log)
+                    print(log)
+                    time.sleep(60)
+                    request_count = 0
+            else:
+                    log = "An unexpected error occurred. Stopping."
+                    logging.error(log)
+                    print(log)
     else:
-        print("Failed to retrieve data:", response.status_code)
-        
+        print("Error, failed to retrieve data:", response.status_code)
+
+    request_count += 1
+
     return df, data
 
 def to_database(df,table):
@@ -64,10 +97,3 @@ def csv_name():
     filename = (f'{caller_file_path_short}{extension}')
 
     return filename
-
-def to_csv(df,filename):   
-    try:
-        df.to_csv(filename,index=False)
-        print("Data successfully written to .csv file.")
-    except Exception as e:
-        print("Failed to write data to .csv file:", str(e))
