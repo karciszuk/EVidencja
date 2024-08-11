@@ -1,0 +1,73 @@
+# cd-pipeline.yml
+trigger:
+  branches:
+    include:
+      - main
+
+jobs:
+- deployment: Staging
+  environment: 'staging'
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - download: current
+          artifact: python-package
+
+        - script: pip install -r requirements.txt
+          displayName: 'Install Dependencies'
+
+        - script: pip install $(Pipeline.Workspace)/python-package/*.whl
+          displayName: 'Install Build Artifact'
+
+        - script: python manage.py migrate
+          displayName: 'Run Migrations'
+
+        - script: python manage.py collectstatic --noinput
+          displayName: 'Collect Static Files'
+
+        - script: python manage.py runserver 0.0.0.0:8000
+          displayName: 'Run Server'
+
+        - task: Bash@3
+          inputs:
+            targetType: 'inline'
+            script: |
+              # Add commands to run integration tests
+              echo "Running integration tests..."
+
+        - task: AzureCLI@2
+          inputs:
+            azureSubscription: 'your-service-connection'
+            scriptType: 'bash'
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              # Add Azure-specific deployment commands
+              echo "Deploying to Azure..."
+
+- deployment: Production
+  environment: 'production'
+  strategy:
+    runOnce:
+      preDeploy:
+        steps:
+        - task: ManualValidation@0
+          inputs:
+            instructions: 'Please approve deployment to production'
+            onTimeout: 'reject'
+            timeout: '1200'
+            environment: 'Staging'
+
+      deploy:
+        steps:
+        - download: current
+          artifact: python-package
+
+        - task: AzureCLI@2
+          inputs:
+            azureSubscription: 'your-service-connection'
+            scriptType: 'bash'
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              # Add Azure-specific deployment commands
+              echo "Deploying to Azure..."
