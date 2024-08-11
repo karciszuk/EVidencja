@@ -3,6 +3,9 @@
 # Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/python
 
+variables:
+- group: GitHubSecrets
+
 trigger:
 - master
 
@@ -31,6 +34,7 @@ steps:
   displayName: 'Install dependencies'
 
 - script: |
+    export GITHUB_TOKEN=$(GITHUB_TOKEN)
     pip install pytest pytest-azurepipelines
     pytest
   displayName: 'pytest'

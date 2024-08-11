@@ -1,4 +1,8 @@
 # cd-pipeline.yml
+
+variables:
+- group: GitHubSecrets
+
 trigger:
   branches:
     include:
