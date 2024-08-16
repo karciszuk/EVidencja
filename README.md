@@ -2,9 +2,7 @@
 
 ## Introduction
 
-This project involves extracting, transforming, and analyzing vehicle registration data from the Central Register of Vehicles and Drivers (CEPiK) API in Poland.
-The aim is to provide insights into vehicle registration trends over the past few years. 
-This project is ideal for a junior data engineer and will demonstrate skills in API interaction, data processing, and basic data analysis.
+EVidencja is a Python-based project to analyze the popularity, growth, and trends of electric vehicles in Poland using data from the Central Vehicle and Driver Register.
 
 ## Technologies
 
