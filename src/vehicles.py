@@ -1,9 +1,6 @@
 import pandas as pd
-from main import connect_and_dataload
-import time
+from main import connect_and_dataload, check_file
 from datetime import datetime
-import glob
-import os
 import re
 import logging
 
@@ -12,10 +9,6 @@ logging.basicConfig(
         filename='docs/api_requests.log', 
         level=logging.INFO, 
         format='%(asctime)s %(levelname)s:%(message)s')
-
-def check_file(path,name):
-        files = glob.glob(os.path.join(path, name))
-        return files
 
 api_link = "https://api.cepik.gov.pl/pojazdy"
 table = 'CepikApiData'

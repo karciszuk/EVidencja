@@ -1,9 +1,3 @@
-def printe():
-        e = input('input')
-        if e == 0:
-                print("0")
-        else:
-                print("Error parsing JSON:", 'e')
-        return 5
-
-printe()
+string = "https://api.cepik.gov.pl/www/files/pojazdy_06_2022-04-17.zip"
+find = string.find("pojazdy")
+print(string[find:])

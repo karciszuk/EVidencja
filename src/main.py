@@ -1,7 +1,17 @@
-def conxn():
-    from sqlalchemy import create_engine 
-    import urllib 
+import glob
+import os
+from pathlib import Path
+import inspect
+import requests
+from requests.adapters import HTTPAdapter
+import ssl
+import pandas as pd
+import logging
+import time
+from sqlalchemy import create_engine 
+import urllib 
 
+def conxn():
     conn = urllib.parse.quote_plus( 
         'Data Source Name=qrice;' 
         'Driver={ODBC Driver 17 for SQL Server};' 
@@ -13,13 +23,6 @@ def conxn():
     return coxn  
 
 def connect_and_dataload(api_link,params):
-    import requests
-    from requests.adapters import HTTPAdapter
-    import ssl
-    import pandas as pd
-    import logging
-    import time
-
     class SSLAdapter(HTTPAdapter):
         def init_poolmanager(self, *args, **kwargs):
             ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
@@ -86,10 +89,6 @@ def to_database(df,table):
         print("Failed to write data to SQL database:", str(e))
 
 def csv_name():
-    from pathlib import Path
-    import os
-    import inspect
-
     caller_frame = inspect.stack()[1]
     caller_file_path_full = os.path.abspath(caller_frame.filename)
     caller_file_path_short = caller_file_path_full[:-3]
@@ -97,3 +96,7 @@ def csv_name():
     filename = (f'{caller_file_path_short}{extension}')
 
     return filename
+
+def check_file(path,name):
+        files = glob.glob(os.path.join(path, name))
+        return files
