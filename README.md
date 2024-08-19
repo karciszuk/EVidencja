@@ -2,10 +2,11 @@
 
 ## Introduction
 
-EVidencja is a Python-based project to analyze the popularity, growth, and trends of electric vehicles in Poland using data from the Central Vehicle and Driver Register. This project retrieves data from the CEPIK (Central Vehicle and Driver Register) API, store it in a Microsoft SQL Server database, and visualize the data using Power BI.
+EVidencja is a Python-based project to analyze the popularity, growth, and trends of electric vehicles in Poland using data from the Central Vehicle and Driver Register.
 
 ## Features
-- Automated Data Retrieval: Download electric vehicle data from the CEPIK API.
+- Automated Data Retrieval: Download electric vehicle data in bulk from the CEPIK API.
+- Automated Updates: Check what period data cover and download updates from the last date in database.
 - Database Integration: Store the data in a MS SQL Server database.
 - Data Visualization: Load the data into pre-created PowerBi dashboard.
 - Scheduled Updates: Automate data updates at regular intervals to keep your dataset current.
